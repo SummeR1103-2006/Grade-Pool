@@ -1,0 +1,244 @@
+/* ────────────────────────────────────────────────────────────────────
+   main.css — styles for Grade Pool (v7.4)
+──────────────────────────────────────────────────────────────────── */
+
+/* 1) Reset defaults, set Calibri as the font, light blue background */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: Calibri, sans-serif;
+    background-color: #eaf4ff; /* very light blue hue */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+  
+  /* ────────────────────────────────────────────────────────────────────
+     2) HEADER: simple text, no wave animation
+  ──────────────────────────────────────────────────────────────────── */
+  header {
+    text-align: center;
+    background: transparent; /* no purple or wave */
+    color: #333;
+    padding: 4rem 1rem 2rem 1rem; /* extra top/bottom padding so description isn’t touching the card */
+  }
+  
+  header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  header p {
+    font-size: 1.1rem;
+  }
+  
+  /* ────────────────────────────────────────────────────────────────────
+     3) MAIN CARD: white background, rounded corners
+  ──────────────────────────────────────────────────────────────────── */
+  main {
+    flex: 1;
+    max-width: 600px;
+    width: 90%;
+    margin: -30px auto 2rem auto; /* slight overlap so header is clearly above card */
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+  }
+  
+  /* 3a) “Class Name” container */
+  #class-name-container {
+    margin-bottom: 1rem;
+  }
+  
+  #class-name-container label {
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+  
+  #class-name-input {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* 3b) Column labels (centered) */
+  .table-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 0.5rem;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+  }
+  
+  .table-header .col-name,
+  .table-header .col-weight,
+  .table-header .col-grade {
+    text-align: center;
+  }
+  
+  /* 3c) Each “row” of inputs (grade-item) */
+  .grade-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .grade-item input {
+    padding: 0.6rem 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border 0.2s;
+  }
+  
+  /* Right-align numeric fields */
+  .grade-item .input-weight,
+  .grade-item .input-grade {
+    text-align: right;
+  }
+  
+  /* ────────────────────────────────────────────────────────────────────
+     4) BUTTON ROW (Add Row / Calculate Average)
+  ──────────────────────────────────────────────────────────────────── */
+  .button-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .button-row button {
+    flex: 1;
+    padding: 0.7rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #4a90e2;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .button-row button:hover {
+    background-color: #357ab8;
+  }
+  
+  /* ────────────────────────────────────────────────────────────────────
+     5) “Add Class” button
+  ──────────────────────────────────────────────────────────────────── */
+  #add-class-btn {
+    width: 100%;
+    padding: 0.7rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #28a745; /* green */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 1rem;
+  }
+  
+  #add-class-btn:hover {
+    background-color: #218838;
+  }
+  
+  /* ────────────────────────────────────────────────────────────────────
+     6) RESULT DISPLAY
+  ──────────────────────────────────────────────────────────────────── */
+  #result {
+    margin-top: 1rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-align: center;
+    color: #222;
+  }
+  
+  /* ────────────────────────────────────────────────────────────────────
+     7) “My Classes” LIST (class names only; no timestamps)
+  ──────────────────────────────────────────────────────────────────── */
+  #saved-classes-container {
+    margin-top: 1.5rem;
+  }
+  
+  #saved-classes-container h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  #saved-classes-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  #saved-classes-list li {
+    padding: 0.5rem;
+    margin-bottom: 0.3rem;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  #saved-classes-list li:hover {
+    background-color: #e0e0e0;
+  }
+  
+  #saved-classes-list em {
+    color: #555;
+    font-style: normal;
+  }
+  
+  /* ────────────────────────────────────────────────────────────────────
+     8) RESOURCES SECTION (unchanged)
+  ──────────────────────────────────────────────────────────────────── */
+  #resources-container {
+    margin-top: 2rem;
+  }
+  
+  #resources-container h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  #resources-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  #resources-list li {
+    margin-bottom: 0.4rem;
+  }
+  
+  #resources-list a {
+    color: #0066cc;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  #resources-list a:hover {
+    color: #004999;
+  }
+  
+  /* ────────────────────────────────────────────────────────────────────
+     9) FOOTER
+  ──────────────────────────────────────────────────────────────────── */
+  footer {
+    background-color: #ddd;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: auto;
+  }
+  
