@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grade Pool</title>
+
+  <!-- 1) FAVICON: wave emoji (🌊) -->
+  <link
+    rel="icon"
+    href="data:image/svg+xml,
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
+        <text y='50%' x='50%' dominant-baseline='middle' text-anchor='middle' font-size='48'>🌊</text>
+      </svg>"
+  />
+
+  <!-- 2) LINK TO UPDATED CSS -->
+  <link rel="stylesheet" href="main.css" />
+
+  <!-- 3) (Optional) AD SLOT #1 -->
+  <!-- <script src="YOUR-ADS-SCRIPT.js"></script> -->
+</head>
+<body>
+  <!-- ───────────────────────────────────────────────────────────────── HEADER ───────────────────────────────────────────────────────────────── -->
+  <header>
+    <div class="header-content">
+      <h1>Grade Pool</h1>
+      <p>Track your weighted grades in one place.</p>
+    </div>
+  </header>
+
+  <!-- ───────────────────────────────────────────────────────────────── MAIN CONTENT (CALCULATOR CARD) ───────────────────────────────────────────────────────────────── -->
+  <main>
+    <!-- 1) “Class Name” input -->
+    <div id="class-name-container">
+      <label for="class-name-input">Class Name:</label>
+      <input
+        type="text"
+        id="class-name-input"
+        placeholder="e.g. Calculus I"
+      />
+    </div>
+
+    <!-- 2) Column labels (centered) -->
+    <div class="table-header">
+      <div class="col-name">Name</div>
+      <div class="col-weight">Weight (%)</div>
+      <div class="col-grade">Grade (%)</div>
+    </div>
+
+    <!-- 3) Container for dynamic “grade-item” rows -->
+    <div id="grade-container">
+      <div class="grade-item">
+        <input
+          type="text"
+          class="input-name"
+          placeholder="e.g. Midterm"
+        />
+        <input
+          type="number"
+          class="input-weight"
+          placeholder="e.g. 25"
+          min="0"
+          max="100"
+        />
+        <input
+          type="number"
+          class="input-grade"
+          placeholder="e.g. 88"
+          min="0"
+          max="100"
+        />
+      </div>
+    </div>
+
+    <!-- 4) Row-level buttons: Add Row / Calculate Average -->
+    <div class="button-row">
+      <button id="add-grade">➕ Add Row</button>
+      <button id="calculate">📊 Calculate Average</button>
+    </div>
+
+    <!-- 5) “Add Class” button (always visible) -->
+    <button id="add-class-btn">➕ Add Class</button>
+
+    <!-- 6) Computed result appears here -->
+    <div id="result"></div>
+
+    <!-- 7) “My Classes” list (populated from localStorage) -->
+    <div id="saved-classes-container">
+      <h3>My Classes</h3>
+      <ul id="saved-classes-list"></ul>
+    </div>
+
+    <!-- 8) Resources for Academic Success -->
+    <div id="resources-container">
+      <h3>Resources for Academic Success</h3>
+      <ul id="resources-list">
+        <li>
+          <a href="https://www.khanacademy.org" target="_blank" rel="noopener noreferrer">
+            Khan Academy
+          </a>
+        </li>
+        <li>
+          <a href="https://www.coursera.org" target="_blank" rel="noopener noreferrer">
+            Coursera
+          </a>
+        </li>
+        <li>
+          <a href="https://www.edx.org" target="_blank" rel="noopener noreferrer">
+            edX
+          </a>
+        </li>
+        <li>
+          <a href="https://ocw.mit.edu" target="_blank" rel="noopener noreferrer">
+            MIT OpenCourseWare
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- (Optional) AD SLOT #2 -->
+    <!-- <script src="YOUR-SECOND-ADS-SCRIPT.js"></script> -->
+  </main>
+
+  <!-- ───────────────────────────────────────────────────────────────── FOOTER ───────────────────────────────────────────────────────────────── -->
+  <footer>
+    <p>&copy; 2025 Grade Pool. All rights reserved.</p>
+  </footer>
+
+  <!-- ───────────────────────────────────────────────────────────────── JAVASCRIPT ───────────────────────────────────────────────────────────────── -->
+  <script>
+    console.log("🔥 Grade Pool script is running");
+
+    //
+    // localStorage functions for “classes”
+    //
+    function getAllClasses() {
+      const raw = localStorage.getItem("classes");
+      return raw ? JSON.parse(raw) : [];
+    }
+
+    function saveAllClasses(arr) {
+      localStorage.setItem("classes", JSON.stringify(arr));
+    }
+
+    //
+    // Render “My Classes” list (class names only)
+    //
+    function renderSavedClasses() {
+      const listEl = document.getElementById("saved-classes-list");
+      listEl.innerHTML = "";
+
+      const classes = getAllClasses();
+      if (classes.length === 0) {
+        listEl.innerHTML = "<li><em>No classes saved yet.</em></li>";
+        return;
+      }
+
+      classes.forEach((cls) => {
+        const li = document.createElement("li");
+        li.textContent = cls.className;
+        li.addEventListener("click", () => {
+          loadClassIntoCalculator(cls);
+        });
+        listEl.appendChild(li);
+      });
+    }
+
+    //
+    // Load a saved class into the calculator
+    //
+    function loadClassIntoCalculator(cls) {
+      document.getElementById("class-name-input").value = cls.className;
+      const container = document.getElementById("grade-container");
+      container.innerHTML = "";
+      cls.items.forEach((item) => {
+        const row = document.createElement("div");
+        row.classList.add("grade-item");
+        row.innerHTML =
+          `<input type="text" class="input-name" placeholder="e.g. Assignment" value="${item.name}" />` +
+          `<input type="number" class="input-weight" placeholder="e.g. 15" min="0" max="100" value="${item.weight}" />` +
+          `<input type="number" class="input-grade" placeholder="e.g. 92" min="0" max="100" value="${item.grade}" />`;
+        container.appendChild(row);
+      });
+    }
+
+    //
+    // “Add Class” button → save current class to localStorage
+    //
+    document.getElementById("add-class-btn").addEventListener("click", () => {
+      const classNameInput = document.getElementById("class-name-input");
+      const className = classNameInput.value.trim();
+      if (!className) {
+        alert("Please enter a class name before saving.");
+        return;
+      }
+
+      const rows = document.querySelectorAll(".grade-item");
+      const items = [];
+      let hasValidRow = false;
+
+      rows.forEach((row) => {
+        const wInput = row.querySelector(".input-weight");
+        const gInput = row.querySelector(".input-grade");
+        const nameInput = row.querySelector(".input-name");
+
+        const wVal = wInput.value.trim();
+        const gVal = gInput.value.trim();
+        const nameVal = nameInput.value.trim(); // optional
+
+        const wNum = parseFloat(wVal);
+        const gNum = parseFloat(gVal);
+        const wValid = !isNaN(wNum) && wNum >= 0 && wNum <= 100;
+        const gValid = !isNaN(gNum) && gNum >= 0 && gNum <= 100;
+
+        // Highlight only weight/grade if invalid:
+        if (!wValid) wInput.style.border = "2px solid red"; else wInput.style.border = "1px solid #ccc";
+        if (!gValid) gInput.style.border = "2px solid red"; else gInput.style.border = "1px solid #ccc";
+
+        if (wValid && gValid) {
+          hasValidRow = true;
+          items.push({ name: nameVal, weight: wNum, grade: gNum });
+        }
+      });
+
+      if (!hasValidRow) {
+        alert("Cannot save: please fill at least one valid row (Weight & Grade).");
+        return;
+      }
+
+      const classes = getAllClasses();
+      const existingIdx = classes.findIndex(
+        (c) => c.className.toLowerCase() === className.toLowerCase()
+      );
+
+      const newEntry = { className, items, timestamp: Date.now() };
+
+      if (existingIdx >= 0) {
+        classes[existingIdx] = newEntry;
+      } else {
+        classes.push(newEntry);
+      }
+      saveAllClasses(classes);
+      renderSavedClasses();
+      alert(`“${className}” has been saved.`);
+    });
+
+    //
+    // Grade calculation logic
+    //
+    document.getElementById("add-grade").addEventListener("click", () => {
+      const container = document.getElementById("grade-container");
+      const newItem = document.createElement("div");
+      newItem.classList.add("grade-item");
+      newItem.innerHTML =
+        '<input type="text" class="input-name" placeholder="e.g. Assignment" />' +
+        '<input type="number" class="input-weight" placeholder="e.g. 15" min="0" max="100" />' +
+        '<input type="number" class="input-grade" placeholder="e.g. 92" min="0" max="100" />';
+      container.appendChild(newItem);
+    });
+
+    document.getElementById("calculate").addEventListener("click", () => {
+      const rows = document.querySelectorAll(".grade-item");
+      let totalWeight = 0;
+      let weightedSum = 0;
+      let foundValid = false;
+
+      // Clear previous red outlines
+      rows.forEach((row) => {
+        row.querySelector(".input-weight").style.border = "1px solid #ccc";
+        row.querySelector(".input-grade").style.border = "1px solid #ccc";
+      });
+
+      rows.forEach((row) => {
+        const wInput = row.querySelector(".input-weight");
+        const gInput = row.querySelector(".input-grade");
+        const wVal = wInput.value.trim();
+        const gVal = gInput.value.trim();
+
+        // Skip if both blank
+        if (!wVal && !gVal) return;
+
+        const wNum = parseFloat(wVal);
+        const gNum = parseFloat(gVal);
+        const wValid = !isNaN(wNum) && wNum >= 0 && wNum <= 100;
+        const gValid = !isNaN(gNum) && gNum >= 0 && gNum <= 100;
+
+        if (!wValid) wInput.style.border = "2px solid red";
+        if (!gValid) gInput.style.border = "2px solid red";
+        if (!(wValid && gValid)) return;
+
+        foundValid = true;
+        totalWeight += wNum;
+        weightedSum += gNum * wNum;
+      });
+
+      const resultEl = document.getElementById("result");
+      if (!foundValid || totalWeight === 0) {
+        resultEl.textContent = "Weighted Average: 0%";
+        return;
+      }
+
+      const avg = weightedSum / totalWeight;
+      let letter;
+      if (avg >= 90) letter = "A";
+      else if (avg >= 80) letter = "B";
+      else if (avg >= 70) letter = "C";
+      else if (avg >= 60) letter = "D";
+      else letter = "F";
+
+      resultEl.textContent = `Weighted Average: ${avg.toFixed(
+        2
+      )}%  →  Letter Grade: ${letter}`;
+    });
+
+    //
+    // On page load, render any saved classes
+    //
+    window.addEventListener("DOMContentLoaded", () => {
+      renderSavedClasses();
+    });
+  </script>
+</body>
+</html>
